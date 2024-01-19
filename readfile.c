@@ -1,16 +1,20 @@
 #include <stdio.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+#define MAX_BYTES 2048
 
 int main(int argc, char *argv[]) {
-    FILE *file = fopen(argv[1], "r");
-    if (file == NULL) {
-        printf("Failed to open file: %s\n", argv[1]);
-        return 1;
+    int file = open(argv[1], O_RDONLY);
+    char s[MAX_BYTES];
+    int bytesRead;
+
+    while((bytesRead = read(file, s, MAX_BYTES))>0){
+        write(1, s, bytesRead);
     }
 
-    for (int c = fgetc(file); c != EOF; c = fgetc(file)) {
-        printf("%c", c);
-    }
 
-    fclose(file);
+
+    close(file);
     return 0;
 }
